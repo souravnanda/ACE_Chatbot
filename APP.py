@@ -1,23 +1,4 @@
-# =============================================================================
-# C46 Accelerator — Week 2
-# Chatbot v1: RCT System Prompt (Role, Context, Task)
-# =============================================================================
-#
-# WHAT THIS FILE DOES:
-#   A minimal Streamlit chatbot that talks to a language model using a
-#   system prompt built with the RCT framework only.
-#
-# HOW TO RUN:
-#   1. Save this file as Chatbot_RCT.py
-#   2. In your terminal (inside VS Code): pip install streamlit openai python-dotenv
-#   3. Create a .env file in the same directory and add: OPENAI_API_KEY=your_key
-#   4. Run: streamlit run Chatbot_RCT.py
-#
-# READ THIS CODE LOOKING FOR THREE THINGS — IPO:
-#   INPUT   → where the user types
-#   PROCESS → where the model is called with the system prompt
-#   OUTPUT  → where the response is shown back
-# =============================================================================
+## =============================================================================
 
 import os
 import streamlit as st
@@ -27,9 +8,9 @@ from openai import OpenAI
 # -----------------------------------------------------------------------------
 # STREAMLIT UI — the page setup
 # -----------------------------------------------------------------------------
-st.set_page_config(page_title="RCT Chatbot", page_icon="💬")
-st.title("💬 Chatbot — RCT System Prompt")
-st.caption("Built by Sourav | System prompt uses Role, Context, Task only")
+st.set_page_config(page_title="ClinicalPrep Assistant", page_icon="🩺")
+st.title("🩺 ClinicalPrep Chatbot — CC-SC-R Prompt")
+st.caption("Built by Sourav | System prompt uses Context, Constraints, Structure, Checkpoints, Review prompt")
 
 # -----------------------------------------------------------------------------
 # SECURE API KEY INITIALIZATION
