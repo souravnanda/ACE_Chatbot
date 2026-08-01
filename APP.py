@@ -26,7 +26,7 @@ if not API_KEY:
     st.error("API Key missing! Please create a `.env` file in the project root containing: `OPENAI_API_KEY=your_key_here`")
     st.stop()
 
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+client = OpenAI(api_key=API_KEY)
 
 # -----------------------------------------------------------------------------
 # THE SYSTEM PROMPT — CC-SC-R (Context, Constraints, Structure, Checkpoints, Review)
@@ -145,9 +145,9 @@ if user_input:
     messages_to_send.extend(st.session_state.messages)
 
     response = client.chat.completions.create(
-        model="gpt-5-mini",  # your CREAM choice: fast-tier for chat interaction
+        model="gpt-4o-mini",  # your CREAM choice: fast-tier for chat interaction
         messages=messages_to_send,
-        temperature=0.5,
+        temperature=0.7,
     )
 
     assistant_reply = response.choices[0].message.content
