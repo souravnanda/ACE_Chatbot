@@ -1,5 +1,4 @@
 ## =============================================================================
-
 import os
 import streamlit as st
 from dotenv import load_dotenv
@@ -13,17 +12,20 @@ st.title("🩺 ClinicalPrep Chatbot — CC-SC-R Prompt")
 st.caption("Built by Sourav | System prompt uses Context, Constraints, Structure, Checkpoints, Review prompt")
 
 # -----------------------------------------------------------------------------
-# SECURE API KEY INITIALIZATION
+# SECURE API KEY INITIALIZATION (LOCAL .ENV + STREAMLIT CLOUD SECRETS FALLBACK)
 # -----------------------------------------------------------------------------
-# Load environment variables from the .env file
+# 1. Try loading from local .env first
 load_dotenv()
 
-# Retrieve the API key securely
+# 2. Check os.environ (local) first, fallback to st.secrets (Streamlit Cloud)
 API_KEY = os.getenv("OPENAI_API_KEY")
 
-# Check if the API key is missing to prevent runtime errors
+if not API_KEY and "OPENAI_API_KEY" in st.secrets:
+    API_KEY = st.secrets["OPENAI_API_KEY"]
+
+# 3. Prevent runtime crash if missing everywhere
 if not API_KEY:
-    st.error("API Key missing! Please create a `.env` file in the project root containing: `OPENAI_API_KEY=your_key_here`")
+    st.error("API Key missing! Please set OPENAI_API_KEY in your local `.env` file or in Streamlit Cloud App Settings -> Secrets.")
     st.stop()
 
 client = OpenAI(api_key=API_KEY)
@@ -77,7 +79,7 @@ Follow this strict 5-step conversational workflow:
 ### OUTPUT FORMAT (DOCTOR BRIEF TEMPLATE)
 ---
 ### 🩺 Patient Pre-Visit Summary
-**Date:** [Current Date]
+**Date:** [Today's Date]
 **Reason for Visit:** [Primary Concern]
 
 #### 1. Chief Complaint & History of Present Illness
