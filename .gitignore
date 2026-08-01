@@ -1,2 +1,23 @@
+# Environment & Secrets
 .env
 .env.*
+*.env
+.streamlit/secrets.toml
+
+
+# Python Cache & Environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# Output Test Artifacts
+*.pdf
+tests/*.pdf
+
+# IDE Configs
+.vscode/
+.idea/
+.DS_Store

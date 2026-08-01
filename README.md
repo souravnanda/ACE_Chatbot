@@ -1,18 +1,30 @@
-🩺 ClinicalPrep AI
-ClinicalPrep AI is a smart, empathetic patient-intake chatbot designed to bridge the gap between patients and physicians. It guides patients through a structured, conversational interview to organize their symptoms, history, and questions into a clean, professional "Doctor Brief" before their appointment.
+# 🩺 ClinicalPrep AI
 
-🚀 Key Features
-Guided Conversational Intake: Uses the standard medical OPQRST framework (Onset, Provocation, Quality, Region/Radiation, Severity, Time) to interview patients naturally, one or two questions at a time.
+**ClinicalPrep AI** is an intelligent, empathetic patient-intake chatbot designed to bridge the gap between patients and physicians. It guides patients through a structured conversational interview using the standard **OPQRST framework**, compiling their symptoms, history, and goals into a concise 30-second **"Doctor Brief"** summary for their visit.
 
-Structured Physician Summary: Automatically compiles patient responses into a single-page markdown summary that doctors can digest in 30 seconds.
+---
 
-Built-in Safety Guardrails: Programmed with strict zero-diagnosis constraints and an immediate emergency triage protocol for "red-flag" symptoms.
+## 🚀 Key Features
 
-Lightweight & Free Hosting: Built using Python and Streamlit, ready to deploy instantly on Streamlit Community Cloud.
+* **Guided Intake Workflow:** 5-step conversational intake powered by OpenAI (`gpt-4o-mini`).
+* **Adaptive Light/Dark Theme:** Styled using native CSS variables for seamless visual integration across device themes.
+* **Contextual Interaction Chips:** Quick-reply buttons for standard choices to minimize typing friction on mobile devices.
+* **Instant PDF Summary Export:** Automatically converts generated summaries into downloadable PDF briefs using `fpdf2`.
+* **Built-in Triage Guardrails:** Emergency detection logic for red-flag symptoms with zero clinical diagnostic speculation.
 
-🛠️ Tech Stack
-Frontend & Backend: Streamlit (Python)
+---
 
-AI Engine: OpenAI API (gpt-4o-mini)
+## 📁 Modular Package Layout
 
-Framework Design: CC-SC-R (Context, Constraints, Structure, Checkpoints, Review) prompt architecture
+```text
+ACE_Chatbot/
+├── src/
+│   ├── app.py                # Main Streamlit UI & interaction interface
+│   ├── backend.py            # OpenAI client & chat streaming logic
+│   ├── prompts.py            # CC-SC-R system prompt & template definitions
+│   ├── utils/
+│   │   └── pdf_generator.py  # Standalone FPDF export engine
+│   └── assets/
+│       └── style.css         # Theme stylesheet
+└── tests/
+    └── test_e2e.py           # Automated end-to-end testing script
