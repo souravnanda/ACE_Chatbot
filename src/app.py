@@ -159,6 +159,17 @@ with st.sidebar:
         st.session_state.pending_user_input = None
         st.rerun()
 
+    # 📌 CUSTOM SIGNATURE FOOTER
+    st.markdown("---")
+    st.markdown(
+        """
+        <div style="text-align: center; font-size: 0.85rem; opacity: 0.8; color: #38240D; padding-top: 5px;">
+            Made with ❤️ by <b>Sourav Nanda</b>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
 # -----------------------------------------------------------------------------
 # 📌 FROZEN TOP HEADER CONTAINER (LOCKED AT TOP)
 # -----------------------------------------------------------------------------
