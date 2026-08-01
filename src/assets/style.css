@@ -1,4 +1,4 @@
-/* src/assets/style.css - Chocolate Truffle Palette with Comprehensive Dark Mode Override */
+/* src/assets/style.css - Chocolate Truffle Palette with High-Visibility Sidebar Toggle */
 
 :root {
     --bg-cream: #FDFBD4;
@@ -34,7 +34,45 @@
     z-index: 0;
 }
 
-/* 2. SIDEBAR TEXT CONTRAST FIX */
+/* 📌 2. PROMINENT HIGH-VISIBILITY SIDEBAR TOGGLE BUTTON (MOBILE & DESKTOP DRAWER) */
+[data-testid="collapsedControl"],
+button[data-testid="stSidebarCollapseButton"],
+button[aria-label="Expand sidebar"],
+button[aria-label="Collapse sidebar"] {
+    background-color: var(--accent-amber) !important;
+    color: #FFFFFF !important;
+    border-radius: 10px !important;
+    padding: 6px 10px !important;
+    box-shadow: 0 4px 14px rgba(192, 88, 0, 0.35) !important;
+    border: 1px solid var(--accent-brown) !important;
+    transition: all 0.2s ease-in-out !important;
+    z-index: 99999 !important;
+}
+
+[data-testid="collapsedControl"] *,
+button[data-testid="stSidebarCollapseButton"] *,
+button[aria-label="Expand sidebar"] *,
+button[aria-label="Collapse sidebar"] * {
+    color: #FFFFFF !important;
+    fill: #FFFFFF !important;
+}
+
+/* Hover & Active Touch state for toggle button */
+[data-testid="collapsedControl"]:hover,
+button[data-testid="stSidebarCollapseButton"]:hover {
+    background-color: var(--accent-brown) !important;
+    transform: scale(1.06) !important;
+    box-shadow: 0 6px 18px rgba(113, 54, 0, 0.45) !important;
+}
+
+/* Position toggle control clearly at top left */
+[data-testid="collapsedControl"] {
+    position: fixed !important;
+    top: 0.65rem !important;
+    left: 0.75rem !important;
+}
+
+/* 3. SIDEBAR TEXT CONTRAST FIX */
 [data-testid="stSidebar"], 
 [data-testid="stSidebar"] > div {
     background-color: #F5E8C7 !important;
@@ -54,7 +92,7 @@
     color: var(--text-espresso) !important;
 }
 
-/* 3. FROZEN TOP HEADER STICKY WRAPPER */
+/* 4. FROZEN TOP HEADER STICKY WRAPPER */
 div[data-testid="stElementContainer"]:has(.frozen-header-container),
 div[data-testid="element-container"]:has(.frozen-header-container) {
     position: sticky !important;
@@ -117,7 +155,7 @@ div[data-testid="element-container"]:has(.frozen-header-container) {
     transition: width 0.4s ease-in-out;
 }
 
-/* 4. BASE CHAT CARD (ASSISTANT - CRISP WHITE) */
+/* 5. BASE CHAT CARD (ASSISTANT - CRISP WHITE) */
 [data-testid="stChatMessage"] {
     border-radius: 14px;
     padding: 16px 20px;
@@ -139,7 +177,7 @@ div[data-testid="element-container"]:has(.frozen-header-container) {
     border-bottom: 1px solid rgba(192, 88, 0, 0.2) !important;
 }
 
-/* 🎯 CRITICAL FIX FOR DARK MODE: Force ALL text elements inside chat cards to stay Dark Espresso Brown */
+/* Force ALL text elements inside chat cards to stay Dark Espresso Brown */
 [data-testid="stChatMessage"] *,
 [data-testid="stChatMessage"] p,
 [data-testid="stChatMessage"] span,
@@ -156,13 +194,13 @@ div[data-testid="element-container"]:has(.frozen-header-container) {
     display: none !important;
 }
 
-/* 5. QUICK SUGGESTIONS CAPTION CONTRAST FIX */
+/* 6. QUICK SUGGESTIONS CAPTION CONTRAST FIX */
 [data-testid="stCaptionContainer"], 
 [data-testid="stCaptionContainer"] * {
     color: var(--text-espresso) !important;
 }
 
-/* 6. CHAT INPUT BOX CONTRAST FIX FOR DARK MODE */
+/* 7. CHAT INPUT BOX CONTRAST FIX FOR DARK MODE */
 [data-testid="stChatInput"],
 [data-testid="stChatInput"] > div {
     background-color: #FFFFFF !important;
@@ -180,7 +218,7 @@ div[data-testid="element-container"]:has(.frozen-header-container) {
     color: rgba(56, 36, 13, 0.5) !important;
 }
 
-/* 7. BUTTONS STYLING */
+/* 8. BUTTONS STYLING */
 .stButton > button {
     width: 100% !important;
     border-radius: 10px !important;

@@ -11,13 +11,13 @@ from src.prompts import SYSTEM_PROMPT
 from src.utils.pdf_generator import generate_pdf
 
 # -----------------------------------------------------------------------------
-# PAGE CONFIGURATION
+# PAGE CONFIGURATION (Auto-collapses on mobile screens)
 # -----------------------------------------------------------------------------
 st.set_page_config(
     page_title="ClinicalPrep AI",
     page_icon="🩺",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="auto",  # Automatically collapses on mobile devices
 )
 
 # -----------------------------------------------------------------------------
@@ -159,7 +159,7 @@ with st.sidebar:
         st.session_state.pending_user_input = None
         st.rerun()
 
-    # 📌 CUSTOM SIGNATURE FOOTER
+    # CUSTOM SIGNATURE FOOTER
     st.markdown("---")
     st.markdown(
         """
