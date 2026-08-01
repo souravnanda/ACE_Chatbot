@@ -11,13 +11,13 @@ from src.prompts import SYSTEM_PROMPT
 from src.utils.pdf_generator import generate_pdf
 
 # -----------------------------------------------------------------------------
-# PAGE CONFIGURATION (Auto-collapses on mobile screens)
+# PAGE CONFIGURATION (Expanded on Desktop/Laptop, Collapsed on Mobile)
 # -----------------------------------------------------------------------------
 st.set_page_config(
     page_title="ClinicalPrep AI",
     page_icon="🩺",
     layout="wide",
-    initial_sidebar_state="auto",  # Automatically collapses on mobile devices
+    initial_sidebar_state="auto",  # Expands on Desktop (>=768px), Collapses on Mobile (<768px)
 )
 
 # -----------------------------------------------------------------------------

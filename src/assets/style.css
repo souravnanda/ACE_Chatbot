@@ -1,4 +1,4 @@
-/* src/assets/style.css - Chocolate Truffle Palette with High-Visibility Sidebar Toggle */
+/* src/assets/style.css - Chocolate Truffle Palette with Dark Mode Drawer Fix */
 
 :root {
     --bg-cream: #FDFBD4;
@@ -34,8 +34,9 @@
     z-index: 0;
 }
 
-/* 📌 2. PROMINENT HIGH-VISIBILITY SIDEBAR TOGGLE BUTTON (MOBILE & DESKTOP DRAWER) */
+/* 📌 2. SIDE DRAWER TOGGLE BUTTON (DARK & LIGHT MODE HIGH-VISIBILITY FIX) */
 [data-testid="collapsedControl"],
+[data-testid="stSidebarCollapseButton"],
 button[data-testid="stSidebarCollapseButton"],
 button[aria-label="Expand sidebar"],
 button[aria-label="Collapse sidebar"] {
@@ -43,29 +44,34 @@ button[aria-label="Collapse sidebar"] {
     color: #FFFFFF !important;
     border-radius: 10px !important;
     padding: 6px 10px !important;
-    box-shadow: 0 4px 14px rgba(192, 88, 0, 0.35) !important;
-    border: 1px solid var(--accent-brown) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4) !important;
+    border: 2px solid var(--accent-brown) !important;
     transition: all 0.2s ease-in-out !important;
-    z-index: 99999 !important;
+    z-index: 999999 !important;
 }
 
+/* Force bright white SVG icon fill in both Light and Dark modes */
+[data-testid="collapsedControl"] svg,
+[data-testid="collapsedControl"] span,
+[data-testid="collapsedControl"] path,
 [data-testid="collapsedControl"] *,
-button[data-testid="stSidebarCollapseButton"] *,
-button[aria-label="Expand sidebar"] *,
-button[aria-label="Collapse sidebar"] * {
+button[data-testid="stSidebarCollapseButton"] svg,
+button[data-testid="stSidebarCollapseButton"] path,
+button[data-testid="stSidebarCollapseButton"] * {
     color: #FFFFFF !important;
     fill: #FFFFFF !important;
+    stroke: #FFFFFF !important;
 }
 
-/* Hover & Active Touch state for toggle button */
+/* Hover & Touch State */
 [data-testid="collapsedControl"]:hover,
 button[data-testid="stSidebarCollapseButton"]:hover {
     background-color: var(--accent-brown) !important;
-    transform: scale(1.06) !important;
-    box-shadow: 0 6px 18px rgba(113, 54, 0, 0.45) !important;
+    transform: scale(1.08) !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5) !important;
 }
 
-/* Position toggle control clearly at top left */
+/* Fixed position for collapsed control */
 [data-testid="collapsedControl"] {
     position: fixed !important;
     top: 0.65rem !important;
@@ -177,7 +183,7 @@ div[data-testid="element-container"]:has(.frozen-header-container) {
     border-bottom: 1px solid rgba(192, 88, 0, 0.2) !important;
 }
 
-/* Force ALL text elements inside chat cards to stay Dark Espresso Brown */
+/* Force ALL text elements inside chat cards to stay Dark Espresso Brown in Dark Mode */
 [data-testid="stChatMessage"] *,
 [data-testid="stChatMessage"] p,
 [data-testid="stChatMessage"] span,
