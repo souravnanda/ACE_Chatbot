@@ -29,8 +29,7 @@ if not API_KEY:
 client = OpenAI(api_key=API_KEY)
 
 # -----------------------------------------------------------------------------
-# THE SYSTEM PROMPT — RCT VERSION
-# This is the ONLY thing that differs between Chatbot_RCT.py and Chatbot_CCSCR.py
+# THE SYSTEM PROMPT — CC-SC-R (Context, Constraints, Structure, Checkpoints, Review)
 # -----------------------------------------------------------------------------
 SYSTEM_PROMPT = """
 # 1. CONTEXT
@@ -148,7 +147,7 @@ if user_input:
     response = client.chat.completions.create(
         model="gpt-4o-mini",  # your CREAM choice: fast-tier for chat interaction
         messages=messages_to_send,
-        temperature=0.7,
+        temperature=0.5,
     )
 
     assistant_reply = response.choices[0].message.content
@@ -161,10 +160,4 @@ if user_input:
         st.markdown(assistant_reply)
 
 # =============================================================================
-# WHAT TO NOTICE WHEN YOU RUN THIS:
-# - Try asking: "Draft a market update for a client who just started investing."
-# - The output will be reasonable, but generic — no verification, no structure,
-#   no risk flagging, no compliance awareness.
-# - This is exactly what the RCT framework leaves out — and exactly what
-#   Chatbot_CCSCR.py fixes with the same code and a stronger system prompt.
 # =============================================================================
