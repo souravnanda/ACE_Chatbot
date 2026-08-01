@@ -1,0 +1,142 @@
+/* src/assets/style.css - Chocolate Truffle Palette with Frozen Top Header & Fixed Sticky Wrappers */
+
+:root {
+    --bg-cream: #FDFBD4;
+    --bg-gradient-end: #F7EBC6;
+    --text-espresso: #38240D;
+    --accent-amber: #C05800;
+    --accent-brown: #713600;
+    --bot-card-bg: #FFFFFF;      /* Pure Crisp White for Bot */
+    --user-card-bg: #FFE8D6;     /* Warm Terracotta Cream for User */
+}
+
+/* Application Container - Solid Warm Gradient Background */
+.stApp {
+    background: linear-gradient(135deg, var(--bg-cream) 0%, var(--bg-gradient-end) 100%) !important;
+    color: var(--text-espresso) !important;
+}
+
+/* Vector Silhouette Background Overlay (Subtle Medical Pulse Wave) */
+.stApp::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 100 100"><path d="M 0 50 Q 20 50 25 50 T 30 20 T 35 80 T 40 40 T 45 60 T 50 50 T 100 50" stroke="%23713600" stroke-width="1.2" fill="none" opacity="0.06"/></svg>');
+    background-repeat: repeat;
+    background-size: 240px 240px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Sidebar Background */
+[data-testid="stSidebar"] {
+    background-color: #F5E8C7 !important;
+    border-right: 1px solid rgba(113, 54, 0, 0.15) !important;
+}
+
+/* 📌 FROZEN TOP HEADER STICKY WRAPPER (PERMANENTLY LOCKED AT TOP) */
+div[data-testid="stElementContainer"]:has(.frozen-header-container),
+div[data-testid="element-container"]:has(.frozen-header-container) {
+    position: sticky !important;
+    top: 2.8rem !important; /* Locks below Streamlit top toolbar */
+    z-index: 9999 !important;
+    background: linear-gradient(135deg, var(--bg-cream) 0%, var(--bg-gradient-end) 100%) !important;
+}
+
+.frozen-header-container {
+    background: linear-gradient(135deg, var(--bg-cream) 0%, var(--bg-gradient-end) 100%) !important;
+    padding: 12px 16px 14px 16px !important;
+    border-bottom: 2px solid rgba(113, 54, 0, 0.18) !important;
+    box-shadow: 0 6px 16px rgba(56, 36, 13, 0.08) !important;
+    border-radius: 0 0 12px 12px !important;
+    margin-bottom: 12px !important;
+}
+
+.title-text {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 0.2rem;
+    color: var(--text-espresso);
+}
+
+.sub-text {
+    font-size: 0.92rem;
+    opacity: 0.85;
+    margin-bottom: 0.8rem;
+    color: var(--text-espresso);
+}
+
+.progress-label {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-espresso);
+    margin-bottom: 6px;
+}
+
+.step-highlight {
+    color: var(--accent-amber);
+}
+
+/* Custom Progress Bar inside Frozen Container */
+.custom-progress-bg {
+    width: 100%;
+    height: 10px;
+    background-color: rgba(113, 54, 0, 0.12);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.custom-progress-fill {
+    height: 100%;
+    background-color: var(--accent-amber);
+    border-radius: 6px;
+    transition: width 0.4s ease-in-out;
+}
+
+/* Base Chat Card (Default / Assistant - Crisp White) */
+[data-testid="stChatMessage"] {
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 14px;
+    background-color: var(--bot-card-bg) !important;
+    color: var(--text-espresso) !important;
+    border-left: 6px solid var(--accent-brown) !important;
+    border-top: 1px solid rgba(113, 54, 0, 0.12) !important;
+    border-right: 1px solid rgba(113, 54, 0, 0.12) !important;
+    border-bottom: 1px solid rgba(113, 54, 0, 0.12) !important;
+    box-shadow: 0 4px 12px rgba(56, 36, 13, 0.06) !important;
+}
+
+/* 👤 USER CHAT CARD (Warm Terracotta Cream) */
+[data-testid="stChatMessage"]:has(.user-bubble-marker) {
+    background-color: var(--user-card-bg) !important;
+    border-left: 6px solid var(--accent-amber) !important;
+    border-top: 1px solid rgba(192, 88, 0, 0.2) !important;
+    border-right: 1px solid rgba(192, 88, 0, 0.2) !important;
+    border-bottom: 1px solid rgba(192, 88, 0, 0.2) !important;
+}
+
+/* Hide helper markers from DOM display */
+.user-bubble-marker, .assistant-bubble-marker {
+    display: none !important;
+}
+
+/* Buttons Styling */
+.stButton > button {
+    width: 100% !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    padding: 8px 12px !important;
+    background-color: var(--accent-amber) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    transition: all 0.2s ease !important;
+}
+
+.stButton > button:hover {
+    background-color: var(--accent-brown) !important;
+    box-shadow: 0 4px 10px rgba(192, 88, 0, 0.25) !important;
+}
