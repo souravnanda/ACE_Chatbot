@@ -1,4 +1,4 @@
-/* src/assets/style.css - Chocolate Truffle Palette with Frozen Top Header & Fixed Sticky Wrappers */
+/* src/assets/style.css - Chocolate Truffle Palette with Full Dark/Light Contrast Fix */
 
 :root {
     --bg-cream: #FDFBD4;
@@ -31,17 +31,21 @@
     z-index: 0;
 }
 
-/* Sidebar Background */
+/* Sidebar Background & Text Contrast Fix */
 [data-testid="stSidebar"] {
     background-color: #F5E8C7 !important;
     border-right: 1px solid rgba(113, 54, 0, 0.15) !important;
 }
 
-/* 📌 FROZEN TOP HEADER STICKY WRAPPER (PERMANENTLY LOCKED AT TOP) */
+[data-testid="stSidebar"] * {
+    color: var(--text-espresso) !important;
+}
+
+/* 📌 FROZEN TOP HEADER STICKY WRAPPER */
 div[data-testid="stElementContainer"]:has(.frozen-header-container),
 div[data-testid="element-container"]:has(.frozen-header-container) {
     position: sticky !important;
-    top: 2.8rem !important; /* Locks below Streamlit top toolbar */
+    top: 2.8rem !important;
     z-index: 9999 !important;
     background: linear-gradient(135deg, var(--bg-cream) 0%, var(--bg-gradient-end) 100%) !important;
 }
@@ -55,32 +59,36 @@ div[data-testid="element-container"]:has(.frozen-header-container) {
     margin-bottom: 12px !important;
 }
 
+.frozen-header-container * {
+    color: var(--text-espresso) !important;
+}
+
 .title-text {
     font-size: 1.8rem;
     font-weight: 800;
     margin-bottom: 0.2rem;
-    color: var(--text-espresso);
+    color: var(--text-espresso) !important;
 }
 
 .sub-text {
     font-size: 0.92rem;
     opacity: 0.85;
     margin-bottom: 0.8rem;
-    color: var(--text-espresso);
+    color: var(--text-espresso) !important;
 }
 
 .progress-label {
     font-weight: 700;
     font-size: 0.95rem;
-    color: var(--text-espresso);
+    color: var(--text-espresso) !important;
     margin-bottom: 6px;
 }
 
 .step-highlight {
-    color: var(--accent-amber);
+    color: var(--accent-amber) !important;
 }
 
-/* Custom Progress Bar inside Frozen Container */
+/* Custom Progress Bar */
 .custom-progress-bg {
     width: 100%;
     height: 10px;
@@ -96,18 +104,28 @@ div[data-testid="element-container"]:has(.frozen-header-container) {
     transition: width 0.4s ease-in-out;
 }
 
-/* Base Chat Card (Default / Assistant - Crisp White) */
+/* Base Chat Card (Assistant - Crisp White) */
 [data-testid="stChatMessage"] {
     border-radius: 14px;
     padding: 16px 20px;
     margin-bottom: 14px;
     background-color: var(--bot-card-bg) !important;
-    color: var(--text-espresso) !important;
     border-left: 6px solid var(--accent-brown) !important;
     border-top: 1px solid rgba(113, 54, 0, 0.12) !important;
     border-right: 1px solid rgba(113, 54, 0, 0.12) !important;
     border-bottom: 1px solid rgba(113, 54, 0, 0.12) !important;
     box-shadow: 0 4px 12px rgba(56, 36, 13, 0.06) !important;
+}
+
+/* 🎯 CRITICAL CONTRAST FIX: Force all inner text elements in chat bubbles to Espresso Brown */
+[data-testid="stChatMessage"] *,
+[data-testid="stChatMessage"] p,
+[data-testid="stChatMessage"] span,
+[data-testid="stChatMessage"] div,
+[data-testid="stChatMessage"] strong,
+[data-testid="stChatMessage"] em,
+[data-testid="stChatMessage"] li {
+    color: var(--text-espresso) !important;
 }
 
 /* 👤 USER CHAT CARD (Warm Terracotta Cream) */
@@ -124,6 +142,12 @@ div[data-testid="element-container"]:has(.frozen-header-container) {
     display: none !important;
 }
 
+/* Quick Suggestions Label */
+[data-testid="stCaptionContainer"], 
+[data-testid="stCaptionContainer"] * {
+    color: var(--text-espresso) !important;
+}
+
 /* Buttons Styling */
 .stButton > button {
     width: 100% !important;
@@ -134,6 +158,10 @@ div[data-testid="element-container"]:has(.frozen-header-container) {
     color: #FFFFFF !important;
     border: none !important;
     transition: all 0.2s ease !important;
+}
+
+.stButton > button * {
+    color: #FFFFFF !important;
 }
 
 .stButton > button:hover {
