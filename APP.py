@@ -1,165 +1,153 @@
-## =============================================================================
-import os
+# app.py
 import streamlit as st
-from dotenv import load_dotenv
-from openai import OpenAI
+from backend import generate_pdf, get_ai_stream, get_openai_client, load_lottie_url
+from prompts import SYSTEM_PROMPT
+from streamlit_lottie import st_lottie
 
 # -----------------------------------------------------------------------------
-# STREAMLIT UI — the page setup
+# PAGE CONFIG & CUSTOM CSS
 # -----------------------------------------------------------------------------
-st.set_page_config(page_title="ClinicalPrep Assistant", page_icon="🩺")
-st.title("🩺 ClinicalPrep Chatbot — CC-SC-R Prompt")
-st.caption("Built by Sourav | System prompt uses Context, Constraints, Structure, Checkpoints, Review prompt")
+st.set_page_config(
+    page_title="ClinicalPrep Assistant",
+    page_icon="🩺",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
-# -----------------------------------------------------------------------------
-# SECURE API KEY INITIALIZATION (LOCAL .ENV + STREAMLIT CLOUD SECRETS FALLBACK)
-# -----------------------------------------------------------------------------
-# 1. Try loading from local .env first
-load_dotenv()
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    }
+    [data-testid="stChatMessage"] {
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        border: 1px solid #e2e8f0;
+    }
+    [data-testid="stChatMessage"]:nth-child(even) {
+        background-color: #ffffff;
+        border-left: 5px solid #3b82f6;
+    }
+    [data-testid="stChatMessage"]:nth-child(odd) {
+        background-color: #f0fdf4;
+        border-left: 5px solid #10b981;
+    }
+    .main-header { color: #0f172a; font-weight: 700; margin-bottom: 0px; }
+    .sub-header { color: #64748b; font-size: 0.95rem; margin-bottom: 20px; }
+    [data-testid="stSidebar"] { background-color: #ffffff; border-right: 1px solid #e2e8f0; }
+    .stButton>button {
+        width: 100%; border-radius: 12px;
+        background: linear-gradient(90deg, #10b981, #059669);
+        color: white; border: none; font-weight: 600; transition: all 0.2s ease;
+    }
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    </style>
+""",
+    unsafe_allow_html=True,
+)
 
-# 2. Check os.environ (local) first, fallback to st.secrets (Streamlit Cloud)
-API_KEY = os.getenv("OPENAI_API_KEY")
-
-if not API_KEY and "OPENAI_API_KEY" in st.secrets:
-    API_KEY = st.secrets["OPENAI_API_KEY"]
-
-# 3. Prevent runtime crash if missing everywhere
-if not API_KEY:
-    st.error("API Key missing! Please set OPENAI_API_KEY in your local `.env` file or in Streamlit Cloud App Settings -> Secrets.")
+# Initialize OpenAI Client
+client = get_openai_client()
+if not client:
+    st.error(
+        "⚠️ API Key missing! Set OPENAI_API_KEY in your local `.env` file or Streamlit Cloud Secrets."
+    )
     st.stop()
 
-client = OpenAI(api_key=API_KEY)
-
-# -----------------------------------------------------------------------------
-# THE SYSTEM PROMPT — CC-SC-R (Context, Constraints, Structure, Checkpoints, Review)
-# -----------------------------------------------------------------------------
-SYSTEM_PROMPT = """
-# 1. CONTEXT
-- Role: You are "ClinicalPrep AI," a compassionate, structured, and empathetic patient-intake assistant.
-- Domain: Healthcare pre-visit preparation and patient intake.
-- Audience: Patients preparing for an upcoming doctor’s appointment who may feel anxious, overwhelmed, or unclear on how to present their symptoms.
-- Primary Goal: Act as a supportive sounding board to conduct a step-by-step interview that organizes casual patient descriptions into a concise, 30-second readable summary ("Doctor Brief") for their physician.
-
----
-
-# 2. CONSTRAINTS
-- Zero Diagnoses (Mandatory): Never provide medical diagnoses, suggest specific conditions, or recommend clinical treatments. You are an intake assistant, not a doctor.
-- Emergency Triage (Critical Safety): If the user mentions "red flag" symptoms (e.g., severe chest pain, sudden numbness/weakness, severe shortness of breath, sudden severe headache, or thoughts of self-harm):
-  1. IMMEDIATELY halt the intake process.
-  2. Display a bold, prominent emergency warning.
-  3. Direct them to contact emergency services (e.g., 911) or visit the nearest emergency room right away.
-- Medical Disclaimer: Always include a brief disclaimer in your initial response stating that you do not provide medical advice and that this tool is solely for visit preparation.
-- Pacing Limit: Ask ONLY 1 or 2 questions per message to keep the interview conversational and avoid overwhelming the patient.
-- Tone: Warm, empathetic, professional, clear, and reassuring.
-
----
-
-# 3. STRUCTURE
-Follow this strict 5-step conversational workflow:
-
-## Step 1: Greeting & Chief Complaint
-- Introduce yourself, state the disclaimer, and ask: *"What is the main reason for your upcoming visit?"*
-
-## Step 2: Symptom Deep-Dive (OPQRST Framework)
-- Onset & Duration: Ask when the symptom started and how long it lasts.
-- Severity & Location: Ask where it is located and how severe it feels on a 1-10 scale.
-- Triggers & Relievers: Ask what makes it better or worse.
-- Secondary Symptoms: Ask about associated symptoms (e.g., fever, fatigue, nausea).
-
-## Step 3: Context & Interventions
-- Ask about relevant personal/family history or recent lifestyle changes.
-- Ask what medications, supplements, or home remedies they are currently taking for this.
-
-## Step 4: Patient Goals
-- Ask: *"What are 1 to 3 specific questions or outcomes you want to get out of this appointment?"*
-
-## Step 5: Brief Generation
-- Compile all gathered details into the output template below and present it to the user.
-
-### OUTPUT FORMAT (DOCTOR BRIEF TEMPLATE)
----
-### 🩺 Patient Pre-Visit Summary
-**Date:** [Today's Date]
-**Reason for Visit:** [Primary Concern]
-
-#### 1. Chief Complaint & History of Present Illness
-* **Primary Symptom:** [Description]
-* **Onset & Timeline:** [Started X days/weeks ago, constant vs. intermittent]
-* **Severity & Description:** [Score out of 10, e.g., sharp, dull ache]
-* **Aggravating/Relieving Factors:** [What makes it worse/better]
-* **Associated Symptoms:** [Secondary symptoms]
-
-#### 2. Current Interventions
-* **Medications/Supplements Taken for This:** [List or 'None reported']
-* **Home Remedies Attempted:** [List or 'None reported']
-
-#### 3. Top Questions for the Doctor
-1. [Question 1]
-2. [Question 2]
-3. [Question 3]
----
-
----
-
-# 4. CHECKPOINTS
-At each stage of interaction, perform the following internal checks:
-- [ ] Emergency Check: Did the user's latest input contain red-flag emergency symptoms? If yes, trigger triage protocol immediately.
-- [ ] Pacing Check: Am I asking 2 or fewer questions in this message?
-- [ ] Completeness Check: Before moving to Step 5, have I collected Onset, Severity, Aggravating/Relieving Factors, Medications, and Patient Questions?
-- [ ] Review Request: When displaying the draft summary, explicitly ask the patient to review and approve or edit the brief before finishing.
-
----
-
-# 5. REVIEW
-Definition of "Good" Output:
-- Succinct & Objective: Translates casual, vague language into clear, objective summaries that a physician can scan in 30 seconds.
-- Non-Diagnostic Integrity: Contains zero medical advice, speculative diagnoses, or treatment plan suggestions.
-- Accuracy: The summary accurately reflects only the patient-reported information provided during the conversation.
-"""
-
-
-# Initialize message history in Streamlit's session state
+# Initialize Session State
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
 # -----------------------------------------------------------------------------
-# OUTPUT — display the running conversation history
+# SIDEBAR NAVIGATION & ACTIONS
 # -----------------------------------------------------------------------------
-for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
+with st.sidebar:
+    lottie_json = load_lottie_url(
+        "https://assets5.lottiefiles.com/packages/lf20_5njp3vgg.json"
+    )
+    if lottie_json:
+        st_lottie(lottie_json, height=140, key="medical_anim")
 
-# -----------------------------------------------------------------------------
-# INPUT — capture what the user types
-# -----------------------------------------------------------------------------
-user_input = st.chat_input("Ask me anything...")
+    st.markdown("### 📋 Preparation Tracker")
 
-if user_input:
-    # Show the user's message immediately
-    st.session_state.messages.append({"role": "user", "content": user_input})
-    with st.chat_message("user"):
-        st.markdown(user_input)
+    user_msgs = [m for m in st.session_state.messages if m["role"] == "user"]
+    current_step = min(len(user_msgs) + 1, 5)
 
-    # -------------------------------------------------------------------------
-    # PROCESS — send system prompt + conversation history to the model
-    # -------------------------------------------------------------------------
-    messages_to_send = [{"role": "system", "content": SYSTEM_PROMPT}]
-    messages_to_send.extend(st.session_state.messages)
+    st.progress(current_step / 5.0)
+    st.caption(f"**Step {current_step} of 5** in progress")
 
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",  # your CREAM choice: fast-tier for chat interaction
-        messages=messages_to_send,
-        temperature=0.7,
+    st.markdown(
+        """
+    * **1.** Chief Complaint
+    * **2.** Symptom Details
+    * **3.** History & Meds
+    * **4.** Appointment Goals
+    * **5.** Final Doctor Brief
+    """
     )
 
-    assistant_reply = response.choices[0].message.content
+    st.divider()
 
-    # -------------------------------------------------------------------------
-    # OUTPUT — show the model's response back to the user
-    # -------------------------------------------------------------------------
-    st.session_state.messages.append({"role": "assistant", "content": assistant_reply})
-    with st.chat_message("assistant"):
-        st.markdown(assistant_reply)
+    # Search for compiled brief in chat history to display PDF Download Button
+    brief_content = None
+    for msg in reversed(st.session_state.messages):
+        if (
+            msg["role"] == "assistant"
+            and "Patient Pre-Visit Summary" in msg["content"]
+        ):
+            brief_content = msg["content"]
+            break
 
-# =============================================================================
-# =============================================================================
+    if brief_content:
+        st.success("✅ Summary Brief Ready!")
+        pdf_bytes = generate_pdf(brief_content)
+        st.download_button(
+            label="📥 Download Summary PDF",
+            data=pdf_bytes,
+            file_name="Patient_PreVisit_Summary.pdf",
+            mime="application/pdf",
+            use_container_width=True,
+        )
+        st.divider()
+
+    if st.button("🔄 Restart Intake Session"):
+        st.session_state.messages = []
+        st.rerun()
+
+# -----------------------------------------------------------------------------
+# CHAT INTERFACE
+# -----------------------------------------------------------------------------
+st.markdown(
+    "<h1 class='main-header'>🩺 ClinicalPrep Assistant</h1>",
+    unsafe_allow_html=True,
+)
+st.markdown(
+    "<p class='sub-header'>I'm your AI assistant, here to help you prepare for your upcoming doctor's visit.</p>",
+    unsafe_allow_html=True,
+)
+
+# Render Chat History
+for msg in st.session_state.messages:
+    avatar = "👤" if msg["role"] == "user" else "🩺"
+    with st.chat_message(msg["role"], avatar=avatar):
+        st.markdown(msg["content"])
+
+# User Chat Input
+if user_input := st.chat_input("Describe your symptoms or reason for visit..."):
+    st.session_state.messages.append({"role": "user", "content": user_input})
+    with st.chat_message("user", avatar="👤"):
+        st.markdown(user_input)
+
+    with st.chat_message("assistant", avatar="🩺"):
+        stream = get_ai_stream(client, st.session_state.messages, SYSTEM_PROMPT)
+        response_text = st.write_stream(stream)
+
+    st.session_state.messages.append(
+        {"role": "assistant", "content": response_text}
+    )

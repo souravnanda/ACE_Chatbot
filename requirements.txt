@@ -1,3 +1,6 @@
 streamlit
 openai
 python-dotenv
+streamlit-lottie
+requests
+fpdf2
