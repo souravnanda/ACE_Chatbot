@@ -1,4 +1,4 @@
-/* src/assets/style.css - Chocolate Truffle Palette with Full Dark/Light Contrast Fix */
+/* src/assets/style.css - Chocolate Truffle Palette with Comprehensive Dark Mode Override */
 
 :root {
     --bg-cream: #FDFBD4;
@@ -10,8 +10,11 @@
     --user-card-bg: #FFE8D6;     /* Warm Terracotta Cream for User */
 }
 
-/* Application Container - Solid Warm Gradient Background */
-.stApp {
+/* 1. FORCE APPLICATION BACKGROUND & TEXT IN ALL THEMES */
+.stApp, 
+[data-testid="stHeader"], 
+[data-testid="stToolbar"],
+.main .block-container {
     background: linear-gradient(135deg, var(--bg-cream) 0%, var(--bg-gradient-end) 100%) !important;
     color: var(--text-espresso) !important;
 }
@@ -31,17 +34,27 @@
     z-index: 0;
 }
 
-/* Sidebar Background & Text Contrast Fix */
-[data-testid="stSidebar"] {
+/* 2. SIDEBAR TEXT CONTRAST FIX */
+[data-testid="stSidebar"], 
+[data-testid="stSidebar"] > div {
     background-color: #F5E8C7 !important;
     border-right: 1px solid rgba(113, 54, 0, 0.15) !important;
 }
 
-[data-testid="stSidebar"] * {
+/* Force dark espresso text for all headers, labels, and icons in Sidebar */
+[data-testid="stSidebar"] *, 
+[data-testid="stSidebar"] p, 
+[data-testid="stSidebar"] span, 
+[data-testid="stSidebar"] label, 
+[data-testid="stSidebar"] h1, 
+[data-testid="stSidebar"] h2, 
+[data-testid="stSidebar"] h3, 
+[data-testid="stSidebar"] div,
+[data-testid="stSidebar"] .stSlider * {
     color: var(--text-espresso) !important;
 }
 
-/* 📌 FROZEN TOP HEADER STICKY WRAPPER */
+/* 3. FROZEN TOP HEADER STICKY WRAPPER */
 div[data-testid="stElementContainer"]:has(.frozen-header-container),
 div[data-testid="element-container"]:has(.frozen-header-container) {
     position: sticky !important;
@@ -104,7 +117,7 @@ div[data-testid="element-container"]:has(.frozen-header-container) {
     transition: width 0.4s ease-in-out;
 }
 
-/* Base Chat Card (Assistant - Crisp White) */
+/* 4. BASE CHAT CARD (ASSISTANT - CRISP WHITE) */
 [data-testid="stChatMessage"] {
     border-radius: 14px;
     padding: 16px 20px;
@@ -117,18 +130,7 @@ div[data-testid="element-container"]:has(.frozen-header-container) {
     box-shadow: 0 4px 12px rgba(56, 36, 13, 0.06) !important;
 }
 
-/* 🎯 CRITICAL CONTRAST FIX: Force all inner text elements in chat bubbles to Espresso Brown */
-[data-testid="stChatMessage"] *,
-[data-testid="stChatMessage"] p,
-[data-testid="stChatMessage"] span,
-[data-testid="stChatMessage"] div,
-[data-testid="stChatMessage"] strong,
-[data-testid="stChatMessage"] em,
-[data-testid="stChatMessage"] li {
-    color: var(--text-espresso) !important;
-}
-
-/* 👤 USER CHAT CARD (Warm Terracotta Cream) */
+/* 👤 USER CHAT CARD (WARM TERRACOTTA CREAM) */
 [data-testid="stChatMessage"]:has(.user-bubble-marker) {
     background-color: var(--user-card-bg) !important;
     border-left: 6px solid var(--accent-amber) !important;
@@ -137,18 +139,48 @@ div[data-testid="element-container"]:has(.frozen-header-container) {
     border-bottom: 1px solid rgba(192, 88, 0, 0.2) !important;
 }
 
+/* 🎯 CRITICAL FIX FOR DARK MODE: Force ALL text elements inside chat cards to stay Dark Espresso Brown */
+[data-testid="stChatMessage"] *,
+[data-testid="stChatMessage"] p,
+[data-testid="stChatMessage"] span,
+[data-testid="stChatMessage"] div,
+[data-testid="stChatMessage"] strong,
+[data-testid="stChatMessage"] em,
+[data-testid="stChatMessage"] li,
+[data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] * {
+    color: var(--text-espresso) !important;
+}
+
 /* Hide helper markers from DOM display */
 .user-bubble-marker, .assistant-bubble-marker {
     display: none !important;
 }
 
-/* Quick Suggestions Label */
+/* 5. QUICK SUGGESTIONS CAPTION CONTRAST FIX */
 [data-testid="stCaptionContainer"], 
 [data-testid="stCaptionContainer"] * {
     color: var(--text-espresso) !important;
 }
 
-/* Buttons Styling */
+/* 6. CHAT INPUT BOX CONTRAST FIX FOR DARK MODE */
+[data-testid="stChatInput"],
+[data-testid="stChatInput"] > div {
+    background-color: #FFFFFF !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(113, 54, 0, 0.2) !important;
+}
+
+[data-testid="stChatInput"] textarea,
+[data-testid="stChatInput"] textarea * {
+    color: var(--text-espresso) !important;
+    background-color: transparent !important;
+}
+
+[data-testid="stChatInput"] textarea::placeholder {
+    color: rgba(56, 36, 13, 0.5) !important;
+}
+
+/* 7. BUTTONS STYLING */
 .stButton > button {
     width: 100% !important;
     border-radius: 10px !important;
