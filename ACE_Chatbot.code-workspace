@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"name": "ACE_Chatbot",
+			"path": "."
+		}
+	],
+	"settings": {
+		"python-envs.pythonProjects": [
+			{
+				"path": "Chatbot_RCT.py",
+				"envManager": "ms-python.python:venv",
+				"packageManager": "ms-python.python:pip",
+				"workspace": "ACE_Chatbot"
+			}
+		]
+	}
+}
